@@ -37,17 +37,21 @@ public abstract class AbstractMessageConsumer implements MessageListener {
 	@Resource(name="connectionFactory")
 	private ConnectionFactory connectionFactory;	
 	
+	private boolean sendToQueue3 = false;
+	
 	/**
 	 * 
 	 */
-	public AbstractMessageConsumer(MDBStats mdbStats) {
+	public AbstractMessageConsumer(MDBStats mdbStats, boolean sendToQueue3) {
 		this.mdbStats = mdbStats;
+		this.sendToQueue3 = sendToQueue3;
 	}
 
 	public void onMessage(Message msg) {
 		long start = System.currentTimeMillis();
 		try {			
-			sendMessage(messageQueue3, jmsUser, jmsPass);
+			if(sendToQueue3)
+				sendMessage(messageQueue3, jmsUser, jmsPass);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

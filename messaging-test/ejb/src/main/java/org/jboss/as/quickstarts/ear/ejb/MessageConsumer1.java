@@ -32,6 +32,6 @@ public class MessageConsumer1 extends AbstractMessageConsumer implements Message
 	 * 
 	 */
 	public MessageConsumer1() {
-		super(mdbStats);		
+		super(mdbStats, true);		
 	}
 }

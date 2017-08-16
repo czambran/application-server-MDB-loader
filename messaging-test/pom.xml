@@ -75,6 +75,10 @@
         <module>ejb2</module>
         <module>web2</module>
 
+        <module>ear3</module>
+        <module>ejb3</module>
+        <module>web3</module>
+
         <module>producer</module>
     </modules>
 
@@ -97,6 +101,14 @@
                 <type>ejb</type>
             </dependency>
 
+            <dependency>
+                <groupId>org.jboss.quickstarts.eap</groupId>
+                <artifactId>consumer3-ejb</artifactId>
+                <version>${project.version}</version>
+                <type>ejb</type>
+            </dependency>
+
+
             <!-- Define the version of the WAR so that we don't need to repeat 
                 ourselves in every module -->
             <dependency>
@@ -114,6 +126,15 @@
                 <type>war</type>
                 <scope>compile</scope>
             </dependency>
+
+            <dependency>
+                <groupId>org.jboss.quickstarts.eap</groupId>
+                <artifactId>application3-web</artifactId>
+                <version>${project.version}</version>
+                <type>war</type>
+                <scope>compile</scope>
+            </dependency>
+
 
             <dependency>
                 <groupId>org.jboss.quickstarts.eap</groupId>
