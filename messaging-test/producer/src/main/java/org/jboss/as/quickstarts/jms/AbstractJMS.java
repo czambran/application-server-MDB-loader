@@ -44,11 +44,12 @@ public abstract class AbstractJMS implements Runnable {
 	Connection connection = null;
 	Queue queue = null;
 	Context context = null;
-	private String remote;
+	private String[] remotes;
+	private static int remoteIndex = 0;
 	private String destinationString;	
 
 	protected AbstractJMS(String remote, String destinationString) {
-		this.remote = remote;
+		this.remotes = remote.split(",");
 		this.destinationString = destinationString;
 	}
 
@@ -87,12 +88,22 @@ public abstract class AbstractJMS implements Runnable {
 		System.out.flush();
 	}
 
+	private synchronized String getNextRemote() {
+		String remote = remotes[remoteIndex];
+		remoteIndex++;		
+		if(remoteIndex >= remotes.length)
+			remoteIndex = 0;
+		return remote;
+	}
+	
 	public void connect() throws Exception {
 
 		try {
 			// Set up the context for the JNDI lookup
 			final Properties env = new Properties();
 			env.put(Context.INITIAL_CONTEXT_FACTORY, INITIAL_CONTEXT_FACTORY);
+			String remote = getNextRemote();
+			System.out.println("Using Remote: " + remote);
 			env.put(Context.PROVIDER_URL, System.getProperty(Context.PROVIDER_URL, remote));
 			env.put(Context.SECURITY_PRINCIPAL, System.getProperty("username", DEFAULT_USERNAME));
 			env.put(Context.SECURITY_CREDENTIALS, System.getProperty("password", DEFAULT_PASSWORD));
