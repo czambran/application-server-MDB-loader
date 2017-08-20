@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+echo "Usage: run-large.sh -Dconnection.factory=\"jms/RemoteConnectionFactory\" -Dusername=jmsuser -Dpassword=\"redhat1!\" [comma separated (no spaces) remote://host:port urls] [queue name] [sleep ms between sending messages] [message size in bytes] [number of threads - use multiple of # of remotes]"
+echo "Usage example: run-large.sh remote://hornetq1:4447,remote://hornetq2:4447,remote://hornetq3:4477 queue2 500 2097152 3"
+
 if [ -z "$JBOSS_HOME" ]
 then
   echo "JBOSS_HOME not set"

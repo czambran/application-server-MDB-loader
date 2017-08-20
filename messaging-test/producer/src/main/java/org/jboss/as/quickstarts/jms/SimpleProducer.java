@@ -32,7 +32,7 @@ public class SimpleProducer extends AbstractJMS implements Runnable {
 	public static void main(String args[]) {
 		
 		if(args.length < 4) {
-			System.out.println("Usage: [remote://IP:4447] [destination] [sleepTime] [numberOfThreads]");
+			System.out.println("Usage: [remote://IP:4447,remote://IP2:4447] [destination] [sleepTime] [numberOfThreads]");
 			System.out.println("To configure username/password: -Dusername=username -Dpassword=password");
 			System.exit(0);
 		}

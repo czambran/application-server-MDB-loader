@@ -35,7 +35,7 @@ public class LargeMessageProducer extends AbstractJMS implements Runnable {
 	public static void main(String args[]) {
 		
 		if(args.length < 5) {
-			System.out.println("Usage: [remote://IP:4447,remote://IP:4547] [destination] [sleepTime] [size] [numberOfThreads]");
+			System.out.println("Usage: [remote://IP:4447,remote://IP:4447] [destination] [sleepTime] [size] [numberOfThreads]");
 			System.out.println("Args Length: " + args.length);
 			System.out.println("arg[0] = remote = " + args[0]);
 			System.out.println("arg[1] = destination = " + args[1]);
