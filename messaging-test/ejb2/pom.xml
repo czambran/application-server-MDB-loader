@@ -81,19 +81,36 @@
     </dependency>
   </dependencies>
   <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources/META-INF/</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
     <plugins>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>${version.resources.plugin}</version>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <!-- here the phase you need --> 
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>src/main/resources/META-INF/</outputDirectory>
+              <resources>    
+                <resource>
+                  <directory>src/main/resources/META-INF/filtered</directory>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>    
+            </configuration>    
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <artifactId>maven-ejb-plugin</artifactId>
         <version>${version.ejb.plugin}</version>
         <configuration>
           <filterDeploymentDescriptor>true</filterDeploymentDescriptor>
-          <!-- Tell Maven we are using EJB 3.1 -->
+          <!-- Tell Maven we are using EJB 3.1 --> 
           <ejbVersion>${version.ejb}</ejbVersion>
         </configuration>
       </plugin>
