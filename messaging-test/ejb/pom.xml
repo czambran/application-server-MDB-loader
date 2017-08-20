@@ -97,13 +97,18 @@
     </dependencies>
 
     <build>
-        <finalName>${project.artifactId}</finalName>
-
+   <resources>
+      <resource>
+        <directory>src/main/resources/META-INF/</directory>
+        <filtering>true</filtering>
+      </resource>
+	</resources>
         <plugins>
             <plugin>
                 <artifactId>maven-ejb-plugin</artifactId>
                 <version>${version.ejb.plugin}</version>
                 <configuration>
+                    <filterDeploymentDescriptor>true</filterDeploymentDescriptor>
                     <!-- Tell Maven we are using EJB 3.1 -->
                     <ejbVersion>${version.ejb}</ejbVersion>
                 </configuration>
