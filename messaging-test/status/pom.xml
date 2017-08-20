@@ -22,7 +22,7 @@
     <parent>
         <artifactId>messaging-test</artifactId>
         <groupId>org.jboss.quickstarts.eap</groupId>
-        <version>6.4.0.GA</version>
+        <version>0.2</version>
     </parent>
 
     <artifactId>status</artifactId>

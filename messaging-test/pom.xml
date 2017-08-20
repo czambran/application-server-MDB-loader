@@ -20,7 +20,7 @@
 
     <groupId>org.jboss.quickstarts.eap</groupId>
     <artifactId>messaging-test</artifactId>
-    <version>6.4.0.GA</version>
+    <version>0.2</version>
     <packaging>pom</packaging>
     <name>JBoss EAP Quickstart: messaging-test</name>
 
