@@ -73,16 +73,24 @@ public class LargeMessageProducer extends AbstractJMS implements Runnable {
 			connect();
 			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 			MessageProducer producer = session.createProducer(queue);
+			long thread_id = System.currentTimeMillis();
 	
 			logThreadMessage("sleepTime " + sleepTime);
 			logThreadMessage("Using large message size as " + size);
-	
-			BytesMessage bytesMessage = session.createBytesMessage();
-			bytesMessage.writeBytes(new byte[size]);
 			long i = 0;
-			while (true) {
-				producer.send(bytesMessage);
-				i++;
+			while (i < 500) {
+                BytesMessage bytesMessage = session.createBytesMessage();
+                byte[] messageContent = new byte[size];
+                String message_id = (Long.toString(thread_id) + "-" + i);
+                // Adding Message ID as a property
+                bytesMessage.setStringProperty("MESSAGE_ID", message_id);
+			    byte[] message_id_in_bytes = message_id.getBytes();
+			    // Adding Message ID as the first part of the message body
+                System.arraycopy(message_id_in_bytes, 0, messageContent, 0, message_id_in_bytes.length);
+                bytesMessage.writeBytes(messageContent);
+                producer.send(bytesMessage);
+                logThreadMessage("Produced message with id: " + message_id);
+                i++;
 				if (sleepTime > 0) {
 					Thread.sleep(sleepTime);
 				}
