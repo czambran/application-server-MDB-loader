@@ -18,12 +18,13 @@
         <lookup-name>java:/JmsXA</lookup-name>
       </resource-ref>
 
-<!-- annotation activation properties can be overridden using the xml below
         <activation-config>
           <activation-config-property>
             <activation-config-property-name>destination</activation-config-property-name>
-            <activation-config-property-value>jms/queue/messageQueue1</activation-config-property-value>
+            <activation-config-property-value>${MDB3_DESTINATION}</activation-config-property-value>
           </activation-config-property>
+
+<!-- annotation activation properties can be overridden using the xml below
 
           <activation-config-property>
             <activation-config-property-name>destinationType</activation-config-property-name>
@@ -39,8 +40,8 @@
             <activation-config-property-name>maxSession</activation-config-property-name>
             <activation-config-property-value>100</activation-config-property-value>
           </activation-config-property>
-        </activation-config>
 -->
+        </activation-config>
 
     </message-driven>
   </enterprise-beans>
