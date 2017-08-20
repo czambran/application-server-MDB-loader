@@ -128,7 +128,9 @@ public class Status {
 				sb.append(String.format("%s\n", queue));
 			}
 		}	
-		sb.append(String.format("\nDisk Status:\n%s", diskStatus.toString()));
+		sb.append(String.format("\nDisk Status:\n"));
+		for(String disk : diskStatus)
+			sb.append(String.format("%s\n", disk));
 		sb.append(String.format("\n==============================\n"));
 		return sb.toString();
 	}
