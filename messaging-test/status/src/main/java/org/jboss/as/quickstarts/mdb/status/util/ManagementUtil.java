@@ -19,7 +19,8 @@ public class ManagementUtil {
 
 	private static final String CONSUMER_COUNT_CLI = "/host=%s/server=%s/subsystem=messaging/hornetq-server=%s/jms-queue=%s:read-attribute(name=consumer-count)";
 	private static final String MSG_COUNT_CLI = "/host=%s/server=%s/subsystem=messaging/hornetq-server=%s/jms-queue=%s:read-attribute(name=message-count)";
-
+	private static final String MSG_ADDED_CLI = "/host=%s/server=%s/subsystem=messaging/hornetq-server=%s/jms-queue=%s:read-attribute(name=messages-added)";	
+	
 	private CLI cli = null;
 	
 	/**
@@ -57,7 +58,11 @@ public class ManagementUtil {
 		String messageCountCmd = String.format(MSG_COUNT_CLI, hostServerInstance.getHost(), hostServerInstance.getServerInstance(), "active", queue);
 		return cli.cmd(messageCountCmd).getResponse().get("result").asInt();
 	}
-	
+	public Long getMessagesAdded(HostServerInstance hostServerInstance, String queue) {
+		String messageCountCmd = String.format(MSG_ADDED_CLI, hostServerInstance.getHost(), hostServerInstance.getServerInstance(), "active", queue);
+		return cli.cmd(messageCountCmd).getResponse().get("result").asLong();
+	}
+
 	public void close() {
 		if (cli != null)
 			cli.disconnect();

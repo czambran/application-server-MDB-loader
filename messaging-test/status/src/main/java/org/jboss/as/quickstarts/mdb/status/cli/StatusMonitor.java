@@ -117,11 +117,12 @@ public class StatusMonitor {
 
 				for (String queue : config.getQueues()) {					
 					Integer consumerCount = null, messageCount = null;
+					Long messagsAdded = null;
 					try {
 						consumerCount = mgmtUtil.getConsumerCount(hostServerInstance, queue);
 						messageCount = mgmtUtil.getMessageCount(hostServerInstance, queue);
-						status.addServerStatus(hostServerInstance.toString()).addQueueStatus(queue, consumerCount,
-								messageCount);
+						messagsAdded = mgmtUtil.getMessagesAdded(hostServerInstance, queue);
+						status.addServerStatus(hostServerInstance.toString()).addQueueStatus(queue, consumerCount, messageCount, messagsAdded);
 					} catch (Exception e) {
 						System.err.println(String.format("Error trying to read status for %s - %s - %s",
 								hostServerInstance, "active", queue));

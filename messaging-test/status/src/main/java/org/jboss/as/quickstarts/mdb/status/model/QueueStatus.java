@@ -11,6 +11,7 @@ public class QueueStatus {
 
 	private String name;
 	private Integer messageCount = 0;
+	private Long messagesAdded = 0L;
 	private Integer consumerCount = 0;
 	
 	/**
@@ -54,6 +55,14 @@ public class QueueStatus {
 	}
 
 	public String toString() {
-		return String.format("Queue: %s consumers: %d messages: %d", getName(), getConsumerCount(), getMessageCount());
+		return String.format("Queue: %s consumerCount: %d messageCount: %d messagesAdded: %d", getName(), getConsumerCount(), getMessageCount(), getMessagesAdded());
+	}
+
+	public Long getMessagesAdded() {
+		return messagesAdded;
+	}
+
+	public void setMessagesAdded(Long messagesAdded) {
+		this.messagesAdded = messagesAdded;
 	}
 }

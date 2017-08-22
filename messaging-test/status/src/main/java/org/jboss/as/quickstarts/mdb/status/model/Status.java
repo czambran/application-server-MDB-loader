@@ -97,7 +97,7 @@ public class Status {
 		for(Map.Entry<String, ServerStatus> entry : servers.entrySet()) {			
 			// Sum the Queue total consumers and messages						
 			for(QueueStatus queue : entry.getValue().getQueues().values())
-				totals.addQueueStatus(queue.getName(), queue.getConsumerCount(), queue.getMessageCount(), true);			
+				totals.addQueueStatus(queue.getName(), queue.getConsumerCount(), queue.getMessageCount(), queue.getMessagesAdded(), true);			
 		}
 		return totals;
 	}

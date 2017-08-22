@@ -25,11 +25,11 @@ public class ServerStatus {
 		this.name = serverName;
 	}
 
-	public QueueStatus addQueueStatus(String name, Integer consumerCount, Integer messageCount) {
-		return addQueueStatus(name, consumerCount, messageCount, false);
+	public QueueStatus addQueueStatus(String name, Integer consumerCount, Integer messageCount, Long messagesAdded) {
+		return addQueueStatus(name, consumerCount, messageCount, messagesAdded, false);
 	}
 	
-	public QueueStatus addQueueStatus(String name, Integer consumerCount, Integer messageCount, boolean sum) {
+	public QueueStatus addQueueStatus(String name, Integer consumerCount, Integer messageCount, Long messagesAdded, boolean sum) {
 		QueueStatus status = queues.get(name);
 		if(status == null) {
 			status = new QueueStatus(name);
@@ -38,9 +38,11 @@ public class ServerStatus {
 		if(sum) {
 			consumerCount += status.getConsumerCount();
 			messageCount += status.getMessageCount();
+			messagesAdded += status.getMessagesAdded();
 		}
 		status.setConsumerCount(consumerCount);
 		status.setMessageCount(messageCount);
+		status.setMessagesAdded(messagesAdded);
 		return status;
 	}
 
