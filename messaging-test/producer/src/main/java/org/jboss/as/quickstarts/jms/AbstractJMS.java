@@ -16,76 +16,119 @@
  */
 package org.jboss.as.quickstarts.jms;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
-import javax.jms.MessageConsumer;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-import javax.naming.Context;
-import javax.naming.InitialContext;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-public class AbstractJMS
-{
-   private static final Logger log = Logger.getLogger(AbstractJMS.class.getName());
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Queue;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 
-   // Set up all the default values
-   private static final String DEFAULT_CONNECTION_FACTORY = "jms/RemoteConnectionFactory";
-   private static final String DEFAULT_USERNAME = "guest";
-   private static final String DEFAULT_PASSWORD = "Redhat1!";
-   private static final String INITIAL_CONTEXT_FACTORY = "org.jboss.naming.remote.client.InitialContextFactory";
-   //private static final String PROVIDER_URL = "remote://127.0.0.1:4447";
+public abstract class AbstractJMS implements Runnable {
+	private Logger log;
 
-   /** public static void main(String[] args) throws Exception
-   {
-      YourClass object = new YourClass();
-       object.doRun(args[0], args[1]);
-   } */
+	// Set up all the default values
+	private static final String DEFAULT_CONNECTION_FACTORY = "jms/RemoteConnectionFactory";
+	private static final String DEFAULT_USERNAME = "guest";
+	private static final String DEFAULT_PASSWORD = "Redhat1!";
+	private static final String INITIAL_CONTEXT_FACTORY = "org.jboss.naming.remote.client.InitialContextFactory";
+	// private static final String PROVIDER_URL = "remote://127.0.0.1:4447";
 
-   private ConnectionFactory connectionFactory;
-   Connection connection = null;
-   Queue queue = null;
-   Context context = null;
+	/**
+	 * public static void main(String[] args) throws Exception { YourClass
+	 * object = new YourClass(); object.doRun(args[0], args[1]); }
+	 */
 
-   public void connect(String remote, String destinationString) throws Exception {
+	private ConnectionFactory connectionFactory;
+	Connection connection = null;
+	Queue queue = null;
+	Context context = null;
+	private String[] remotes;
+	private static int remoteIndex = 0;
+	private String destinationString;	
 
-      System.out.println("Parameters expected:");
-      System.out.println("[0]=remote://IP:4447");
-      System.out.println("[1]=destination");
+	protected AbstractJMS(String remote, String destinationString) {
+		this.remotes = remote.split(",");
+		this.destinationString = destinationString;
+	}
 
+	public static void createAndRunThreads(AbstractJMS[] abstracJMSs) {
+		Thread[] threads = new Thread[abstracJMSs.length];
 
-      try
-      {
-         // Set up the context for the JNDI lookup
-         final Properties env = new Properties();
-         env.put(Context.INITIAL_CONTEXT_FACTORY, INITIAL_CONTEXT_FACTORY);
-         env.put(Context.PROVIDER_URL, System.getProperty(Context.PROVIDER_URL, remote));
-         env.put(Context.SECURITY_PRINCIPAL, System.getProperty("username", DEFAULT_USERNAME));
-         env.put(Context.SECURITY_CREDENTIALS, System.getProperty("password", DEFAULT_PASSWORD));
-         context = new InitialContext(env);
+		for (int i = 0; i < abstracJMSs.length; i++) {
+			threads[i] = new Thread(abstracJMSs[i], abstracJMSs[i].getClass().getSimpleName() + ":" + i);
+		}
 
-         // Perform the JNDI lookups
-         String connectionFactoryString = System.getProperty("connection.factory", DEFAULT_CONNECTION_FACTORY);
-         log.info("Attempting to acquire connection factory \"" + connectionFactoryString + "\"");
-         connectionFactory = (ConnectionFactory) context.lookup(connectionFactoryString);
-         log.info("Found connection factory \"" + connectionFactoryString + "\" in JNDI");
+		for (int i = 0; i < abstracJMSs.length; i++) {
+			try {
+				threads[i].start();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		// wait for consumers to finish
+		for (int i = 0; i < abstracJMSs.length; i++) {
+			try {
+				threads[i].join();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
-         log.info("Attempting to acquire destination \"" + destinationString + "\"");
-         queue = (Queue) context.lookup(destinationString);
-         // large_queue = (Queue) context.lookup(large_destinationString);
-         log.info("Found destination \"" + destinationString + "\" in JNDI");
+	protected Logger getLogger() {
+		if(log == null)
+		 log = Logger.getLogger(AbstractJMS.class.getName());
+		return log;		
+	}	
+	
+	public void logThreadMessage(String message) {
+		System.out.println(String.format("[%s] %s", Thread.currentThread().getName(), message));
+		System.out.flush();
+	}
 
-         // Create the JMS connection, session, producer, and consumer
-         connection = connectionFactory.createConnection(System.getProperty("username", DEFAULT_USERNAME), System.getProperty("password", DEFAULT_PASSWORD));
+	private synchronized String getNextRemote() {
+		String remote = remotes[remoteIndex];
+		remoteIndex++;		
+		if(remoteIndex >= remotes.length)
+			remoteIndex = 0;
+		return remote;
+	}
+	
+	public void connect() throws Exception {
 
-      }
-      catch (Exception e)
-      {
-         log.severe(e.getMessage());
-         throw e;
-      }
-   }
+		try {
+			// Set up the context for the JNDI lookup
+			final Properties env = new Properties();
+			env.put(Context.INITIAL_CONTEXT_FACTORY, INITIAL_CONTEXT_FACTORY);
+			String remote = getNextRemote();
+			System.out.println("Using Remote: " + remote);
+			env.put(Context.PROVIDER_URL, System.getProperty(Context.PROVIDER_URL, remote));
+			env.put(Context.SECURITY_PRINCIPAL, System.getProperty("username", DEFAULT_USERNAME));
+			env.put(Context.SECURITY_CREDENTIALS, System.getProperty("password", DEFAULT_PASSWORD));
+			context = new InitialContext(env);
+
+			// Perform the JNDI lookups
+			String connectionFactoryString = System.getProperty("connection.factory", DEFAULT_CONNECTION_FACTORY);
+			logThreadMessage("Attempting to acquire connection factory \"" + connectionFactoryString + "\"");
+			connectionFactory = (ConnectionFactory) context.lookup(connectionFactoryString);
+			logThreadMessage("Found connection factory \"" + connectionFactoryString + "\" in JNDI");
+
+			logThreadMessage("Attempting to acquire destination \"" + destinationString + "\"");
+			queue = (Queue) context.lookup(destinationString);
+			// large_queue = (Queue) context.lookup(large_destinationString);
+			logThreadMessage("Found destination \"" + destinationString + "\" in JNDI");
+
+			// Create the JMS connection, session, producer, and consumer
+			connection = connectionFactory.createConnection(System.getProperty("username", DEFAULT_USERNAME),
+					System.getProperty("password", DEFAULT_PASSWORD));
+
+		} catch (Exception e) {
+			getLogger().severe(e.getMessage());
+			throw e;
+		}
+	}
+
+	public abstract void run();
 }
-

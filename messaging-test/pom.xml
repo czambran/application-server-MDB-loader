@@ -20,7 +20,7 @@
 
     <groupId>org.jboss.quickstarts.eap</groupId>
     <artifactId>messaging-test</artifactId>
-    <version>6.4.0.GA</version>
+    <version>0.2</version>
     <packaging>pom</packaging>
     <name>JBoss EAP Quickstart: messaging-test</name>
 
@@ -54,10 +54,11 @@
         <version.ejb.plugin>2.3</version.ejb.plugin>
         <version.war.plugin>2.1.1</version.war.plugin>
         <version.jar.plugin>2.2</version.jar.plugin>
+        <version.resources.plugin>3.0.2</version.resources.plugin>
 
         <!-- maven-compiler-plugin -->
-        <maven.compiler.target>1.6</maven.compiler.target>
-        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
 
         <!-- other versions -->
         <version.javaee>6</version.javaee>
@@ -75,7 +76,12 @@
         <module>ejb2</module>
         <module>web2</module>
 
+        <module>ear3</module>
+        <module>ejb3</module>
+        <module>web3</module>
+
         <module>producer</module>
+        <module>status</module>
     </modules>
 
     <dependencyManagement>
@@ -97,6 +103,14 @@
                 <type>ejb</type>
             </dependency>
 
+            <dependency>
+                <groupId>org.jboss.quickstarts.eap</groupId>
+                <artifactId>consumer3-ejb</artifactId>
+                <version>${project.version}</version>
+                <type>ejb</type>
+            </dependency>
+
+
             <!-- Define the version of the WAR so that we don't need to repeat 
                 ourselves in every module -->
             <dependency>
@@ -112,6 +126,22 @@
                 <artifactId>application2-web</artifactId>
                 <version>${project.version}</version>
                 <type>war</type>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.quickstarts.eap</groupId>
+                <artifactId>application3-web</artifactId>
+                <version>${project.version}</version>
+                <type>war</type>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.quickstarts.eap</groupId>
+                <artifactId>status</artifactId>
+                <version>${project.version}</version>
+                <type>jar</type>
                 <scope>compile</scope>
             </dependency>
 
@@ -149,6 +179,13 @@
             <dependency>
                 <groupId>org.jboss.bom.eap</groupId>
                 <artifactId>jboss-javaee-6.0-with-hibernate</artifactId>
+                <version>${version.jboss.bom.eap}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.bom</groupId>
+                <artifactId>eap6-supported-artifacts</artifactId>
                 <version>${version.jboss.bom.eap}</version>
                 <type>pom</type>
                 <scope>import</scope>

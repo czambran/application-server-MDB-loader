@@ -15,20 +15,20 @@
       </env-entry>
       <resource-ref>
         <res-ref-name>messageQueue3</res-ref-name>
-        <lookup-name>java:/jms/queue/messageQueue2</lookup-name>
+        <lookup-name>${MESSAGE_QUEUE_3}</lookup-name>
       </resource-ref>
       <resource-ref>
         <res-ref-name>connectionFactory</res-ref-name>
         <lookup-name>java:/JmsXA</lookup-name>
       </resource-ref>
  
-<!-- annotation activation properties can be overridden using the xml below
         <activation-config>
           <activation-config-property>
             <activation-config-property-name>destination</activation-config-property-name>
-            <activation-config-property-value>jms/queue/messageQueue1</activation-config-property-value>
+            <activation-config-property-value>${MDB1_DESTINATION}</activation-config-property-value>
           </activation-config-property>
 
+<!-- annotation activation properties can be overridden using the xml below
           <activation-config-property>
             <activation-config-property-name>destinationType</activation-config-property-name>
             <activation-config-property-value>javax.jms.Queue</activation-config-property-value>
@@ -43,8 +43,8 @@
             <activation-config-property-name>maxSession</activation-config-property-name>
             <activation-config-property-value>100</activation-config-property-value>
           </activation-config-property>
-        </activation-config>
 -->
+        </activation-config>
 
     </message-driven>
   </enterprise-beans>

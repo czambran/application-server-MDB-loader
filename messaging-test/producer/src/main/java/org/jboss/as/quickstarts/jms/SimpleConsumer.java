@@ -15,50 +15,58 @@ package org.jboss.as.quickstarts.jms;
 
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
-import javax.jms.MessageProducer;
 import javax.jms.Session;
 
 /**
  * @author Clebert Suconic
  */
 
-public class SimpleConsumer extends AbstractJMS
-{
+public class SimpleConsumer extends AbstractJMS implements Runnable {
 
-   public static void main(String arg[])
-   {
-      SimpleConsumer producer = new SimpleConsumer();
-      try
-      {
-         producer.connect(arg[0], arg[1]);
-         producer.run();
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-   }
+	public SimpleConsumer(String remote, String destinationString) {
+		super(remote, destinationString);
+	}
 
+	public static void main(String args[]) {
+		
+		if(args.length < 3) {
+			System.out.println("Usage: [remote://IP:4447] [destination] [numberOfThreads]");
+			System.out.println("To configure username/password: -Dusername=username -Dpassword=password");
+			System.exit(0);
+		}
+		
+		String remote = args[0];
+		String destinationString = args[1];
+		int numberOfThreads = Integer.parseInt(args[2]);
+		SimpleConsumer[] consumers = new SimpleConsumer[numberOfThreads];
+		for (int i = 0; i < consumers.length; i++)
+			consumers[i] = new SimpleConsumer(remote, destinationString);
 
-  public void run() throws Exception
-   {
-      Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-      MessageConsumer consumer = session.createConsumer(queue);
+		createAndRunThreads(consumers);
+	}
 
-      connection.start();
+	public void run() {
+		try {
+			connect();
+			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+			MessageConsumer consumer = session.createConsumer(queue);
 
-      long i = 0;
-      while (true) {
-         Message message = consumer.receive(5000);
-         if (message == null) {
-            System.out.println("Didn't receive a message for 5 seconds, giving up");
-            break;
-         }
-         i++;
-         if (i % 100 == 0)
-         {
-            System.out.println("Received " + i + " messages on " + queue);
-         }
-      }
-   }
+			connection.start();
+
+			long i = 0;
+			while (true) {
+				Message message = consumer.receive(5000);
+				if (message == null) {
+					logThreadMessage("Didn't receive a message for 5 seconds, giving up");
+					break;
+				}
+				i++;
+				if (i % 100 == 0) {
+					logThreadMessage("Received " + i + " messages on " + queue);
+				}
+			}
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+	}
 }

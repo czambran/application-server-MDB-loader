@@ -1,0 +1,4 @@
+**/bin
+ejb/src/main/resources/META-INF/jboss-ejb3.xml
+ejb2/src/main/resources/META-INF/jboss-ejb3.xml
+ejb3/src/main/resources/META-INF/jboss-ejb3.xml

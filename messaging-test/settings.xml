@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<settings>
+
+<!--
+  <proxies>
+   <proxy>
+      <id>example-proxy</id>
+      <active>true</active>
+      <protocol>http</protocol>
+      <host>proxy.example.com</host>
+      <port>8080</port>
+      <username>proxyuser</username>
+      <password>somepassword</password>
+      <nonProxyHosts>www.google.com|*.example.com</nonProxyHosts>
+    </proxy>
+  </proxies>
+-->
+
+  <profiles>
+    <profile>
+      <id>redhat-public-http</id>
+      <repositories>
+        <repository>
+          <id>jboss-eap</id>
+          <url>https://maven.repository.redhat.com/ga/</url>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>daily</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+            <updatePolicy>daily</updatePolicy>
+          </snapshots>
+          <name>jboss-eap</name>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>redhat-public-http</id>
+          <url>https://maven.repository.redhat.com/ga/</url>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>daily</updatePolicy>
+          </releases>
+          <snapshots>
+            <enabled>false</enabled>
+            <updatePolicy>daily</updatePolicy>
+          </snapshots>
+          <name>jboss-eap</name>
+        </pluginRepository>
+      </pluginRepositories>
+    </profile>
+  </profiles>
+  <!-- Optionally, make the repository active by default -->
+  <activeProfiles>
+    <activeProfile>redhat-public-http</activeProfile>
+  </activeProfiles>
+</settings>

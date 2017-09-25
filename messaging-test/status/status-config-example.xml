@@ -1,0 +1,45 @@
+<status-config>
+
+<!-- interval to check the status - recommend 5 seconds or longer -->
+	<interval>5</interval>
+
+<!-- the domain controller address -->
+<!-- the domain controller port -->
+<!-- the domain controller username to authenticate -->
+<!-- the domain controller passwordto authenticate -->
+  <domain-controller host="127.0.0.1" port="9999" username="admin" password="redhat1!"/>
+
+<!-- the host controller name and server instance name of each of the hornetq servers in the JBoss domain - used to check things like Store and Forward Queues -->
+<!-- host is the name specifed in the host*.xml of the host-controller  <host name="host.controller.1" ... -->
+<!-- server is the server name from the host.xml  <server name="HornetQ_Server_1" ... -->
+<!-- if username / password are not set, it will try to use the same username/password specified for the domain controller above --> 
+<hornetq-server-instances default-jmx-port="4447" default-jmx-username="jmxuser" default-jmx-password="jmxPass1!">
+	<server-instance host-controller-name="host.controller.1" server-name="HornetQ_Server_Instance_1" address="hq1.redhat.com" jmx-port="4447" jmx-username="admin" jmx-password="redhat1!"/>
+	<server-instance host-controller-name="host.controller.2" server-name="HornetQ_Server_Instance_2" address="hq2.redhat.com" jmx-port="4447" jmx-username="admin" jmx-password="redhat1!"/>
+	<server-instance host-controller-name="host.controller.3" server-name="HornetQ_Server_instance_3" address="hq3.redhat.com" jmx-port="4447" jmx-username="admin" jmx-password="redhat1!"/>
+</hornetq-server-instances>
+
+<!-- The queue names to check status on, these name you specify should be that of the jms-queue as defined in your JBoss profile, NOT the JNDI Name
+For example, to watch the ExpiryQueue , the queue would be listed as shown below
+<jms-queue name="ExpiryQueue">
+   <entry name="java:/jms/queue/ExpiryQueue"/>
+</jms-queue>
+-->
+  <queues>
+	  <queue>ExpiryQueue</queue>
+	  <queue>messageQueue1</queue>
+	  <queue>messageQueue2</queue>
+	  <queue>messageQueue3</queue>
+  </queues>
+
+<!-- List any directories to check the size of, make sure that the path you specify is valid from the machine where you are running the status application -->
+  <disk-usage>
+	  <dir>/home/nfs-mount/hornetq/shared/node-01/</dir>
+	  <dir>/home/nfs-mount/hornetq/shared/node-02/</dir>
+	  <dir>/home/nfs-mount/hornetq/shared/node-03/</dir>
+  </disk-usage>
+
+  <alerts>
+    <message-increase-percentage>10</message-increase-percentage>
+  </alerts>
+</status-config>

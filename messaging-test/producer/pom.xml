@@ -20,8 +20,8 @@
 
   <parent>
     <groupId>org.jboss.quickstarts.eap</groupId>
-    <artifactId>jboss-ejb-throws-exception</artifactId>
-    <version>6.4.0.GA</version>
+    <artifactId>messaging-test</artifactId>
+    <version>0.2</version>
   </parent>
 
   <artifactId>producer</artifactId>
